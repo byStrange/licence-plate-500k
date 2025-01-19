@@ -91,7 +91,7 @@ const submitOrder = async () => {
       // Update plate status
       await client
         .from('plates')
-        .update({ status: 'sold' })
+        .update({ status: 'pending' })
         .eq('id', plate.id)
     }
 

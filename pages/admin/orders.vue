@@ -22,14 +22,11 @@
               {{ order?.plates?.number }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-              {{ order?.profiles?.name }}
+              {{ order?.profiles?.email }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-              <select
-                v-model="order.status"
-                @change="updateOrderStatus(order)"
-                class="border border-gray-300 rounded-md shadow-sm py-1 px-2 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              >
+              <select v-model="order.status" @change="updateOrderStatus(order)"
+                class="border border-gray-300 rounded-md shadow-sm py-1 px-2 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                 <option value="pending">Pending</option>
                 <option value="completed">Completed</option>
                 <option value="cancelled">Cancelled</option>
@@ -49,17 +46,40 @@
 const client = useSupabaseClient()
 
 const { data: orders } = await useAsyncData('admin-orders', async () => {
-  const { data, error } = await client
+  const { data: users, error: e } = await client.rpc('admin_list_users');
+  const { data } = await client
     .from('orders')
     .select(`
-      *
+      *,
+      plates(*)
     `)
-  console.log(data, error)
-  return data
+
+  const result = data.map((order) => {
+    return {
+      ...order,
+      profiles: users.find((user) => user.id === order.user_id)
+    }
+  })
+  console.log(result)
+  return result
 })
 
 const updateOrderStatus = async (order) => {
+  console.log(order)
   try {
+    switch (order.status) {
+      case 'cancelled':
+        await client.from('plates').update({ status: 'available' }).eq('id', order.plate_id)
+        break;
+
+      case 'completed':
+        await client.from('plates').update({ status: 'sold' }).eq('id', order.plate_id)
+        break;
+
+      case 'pending':
+        await client.from('plates').update({ status: 'pending' }).eq('id', order.plate_id)
+    }
+
     await client
       .from('orders')
       .update({ status: order.status })

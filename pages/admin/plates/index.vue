@@ -38,13 +38,27 @@
         </tbody>
       </table>
     </div>
+
+
+    <div class="py-12">
+      <h1 class="text-3xl font-bold text-gray-900">Sale statistics</h1>
+      <Bar id="my-chart-id" :options="chartOptions" :data="chartData" />
+    </div>
   </div>
 </template>
 
 <script setup>
+import { Bar } from 'vue-chartjs'
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+
+
 definePageMeta({
   middleware: ['admin']
 })
+
+
 
 const client = useSupabaseClient()
 
@@ -52,8 +66,51 @@ const { data: plates } = await useAsyncData('admin-plates', async () => {
   const { data } = await client
     .from('plates')
     .select('*')
-  console.log('shit')
-  console.log(data)
   return data
 })
+
+const statusCounts = plates.value.reduce((counts, item) => {
+  counts[item.status] = (counts[item.status] || 0) + 1;
+  return counts;
+}, {});
+
+const labels = Object.keys(statusCounts); // ['sold', 'available']
+console.log(labels)
+const values = Object.values(statusCounts); // [2, 1]
+
+var chartData = {
+  labels: labels,
+  datasets: [{
+    label: 'Orders by Status',
+    data: values,
+    backgroundColor: [
+      'rgba(75, 192, 192, 0.6)', // Color for 'sold'
+      'rgba(255, 206, 86, 0.6)', // Color for 'available'
+      'rgba(54, 162, 235, 0.6)', // Color for 'pending' (if exists)
+    ],
+    borderColor: [
+      'rgba(75, 192, 192, 1)',
+      'rgba(255, 206, 86, 1)',
+      'rgba(54, 162, 235, 1)',
+    ],
+    borderWidth: 1
+  }]
+
+}
+
+var chartOptions = {
+  responsive: true,
+  scales: {
+    y: {
+      beginAtZero: true,
+      ticks: {
+        step: 1,
+        callback: function (value) {
+          // Round to the nearest integer if needed, just to be safe
+          return Math.floor(value);  // Ensures integer values
+        },
+      }
+    }
+  }
+}
 </script>
