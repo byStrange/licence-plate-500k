@@ -7,7 +7,7 @@
           class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">
           Add New Plate
         </NuxtLink>
-        <NuxtLink to="/admin/plates/orders"
+        <NuxtLink to="/admin/orders"
           class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">
           Manager orders</NuxtLink>
       </div>
