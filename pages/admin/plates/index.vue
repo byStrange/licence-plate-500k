@@ -2,10 +2,14 @@
   <div>
     <div class="flex justify-between items-center mb-8">
       <h1 class="text-3xl font-bold text-gray-900">Manage License Plates</h1>
-      <NuxtLink to="/admin/plates/new"
-        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">
-        Add New Plate
-      </NuxtLink>
+      <div class="flex gap-x-2">
+        <NuxtLink to="/admin/plates/new"
+          class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">
+          Add New Plate
+        </NuxtLink>
+        <NuxtLink to="/admin/plates/orders"
+          class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">Manager orders</NuxtLink>
+      </div>
     </div>
 
     <div class="bg-white shadow overflow-hidden sm:rounded-lg">
