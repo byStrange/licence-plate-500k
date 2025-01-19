@@ -22,30 +22,18 @@
           <form @submit.prevent="submitOrder" class="space-y-4">
             <div>
               <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-              <input
-                id="name"
-                v-model="formData.name"
-                type="text"
-                required
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              >
+              <input id="name" v-model="formData.name" type="text" required
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
             </div>
 
             <div>
               <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
-              <textarea
-                id="address"
-                v-model="formData.address"
-                required
-                rows="3"
-                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              ></textarea>
+              <textarea id="address" v-model="formData.address" required rows="3"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></textarea>
             </div>
 
-            <button
-              type="submit"
-              class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
+            <button type="submit"
+              class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
               Complete Purchase
             </button>
           </form>
@@ -66,21 +54,17 @@ const formData = ref({
   address: ''
 })
 
+
+definePageMeta({
+  middleware: ['auth']
+})
+
 const total = computed(() => {
   return cart.value.reduce((sum, item) => sum + Number(item.price), 0)
 })
 
 const submitOrder = async () => {
   try {
-    // Update or create profile
-    await client
-      .from('profiles')
-      .upsert({
-        id: user.value.id,
-        name: formData.value.name,
-        address: formData.value.address
-      })
-
     // Create orders
     for (const plate of cart.value) {
       await client.from('orders').insert({

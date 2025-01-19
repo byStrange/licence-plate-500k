@@ -96,6 +96,7 @@ const handleRegister = async () => {
     
     await router.push('/')
   } catch (error) {
+    alert(error.toString().split(':')[1])
     console.error('Error registering:', error)
   }
 }

@@ -3,6 +3,7 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@nuxtjs/supabase'
   ],
+
   supabase: {
     redirectOptions: {
       login: '/auth/login',
@@ -10,6 +11,7 @@ export default defineNuxtConfig({
       exclude: ['/*'],
     }
   },
+
   app: {
     head: {
       title: 'License Plate Sales',
@@ -18,5 +20,7 @@ export default defineNuxtConfig({
         { name: 'viewport', content: 'width=device-width, initial-scale=1' }
       ]
     }
-  }
+  },
+
+  compatibilityDate: '2025-01-19'
 })
