@@ -8,7 +8,8 @@
           Add New Plate
         </NuxtLink>
         <NuxtLink to="/admin/plates/orders"
-          class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">Manager orders</NuxtLink>
+          class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">
+          Manager orders</NuxtLink>
       </div>
     </div>
 
@@ -33,10 +34,15 @@
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
               {{ plate.status }}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 flex gap-x-4">
               <NuxtLink :to="`/admin/plates/${plate.id}`" class="text-indigo-600 hover:text-indigo-900">
                 Edit
               </NuxtLink>
+
+              <button @click="deletePlate(plate)" class="text-red-600 hover:text-red-900">
+                Delete
+              </button>
+
             </td>
           </tr>
         </tbody>
@@ -63,7 +69,6 @@ definePageMeta({
 })
 
 
-
 const client = useSupabaseClient()
 
 const { data: plates } = await useAsyncData('admin-plates', async () => {
@@ -72,6 +77,17 @@ const { data: plates } = await useAsyncData('admin-plates', async () => {
     .select('*')
   return data
 })
+
+const deletePlate = async (plate) => {
+  const { error } = await client.from('plates').delete().eq('id', plate.id)
+  if (error) {
+    alert('This licences plate has been ordered by a user. For security reasons you can not delete licence plates that has been ordered')
+    return;
+  }
+
+  plates.value = plates.value.filter((p) => p.id !== plate.id)
+  alert('Deleted successfully')
+}
 
 const statusCounts = plates.value.reduce((counts, item) => {
   counts[item.status] = (counts[item.status] || 0) + 1;
