@@ -1,0 +1,23 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "HOST=0.0.0.0 nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "nuxt": "^3.13.0",
+    "@supabase/supabase-js": "^2.39.0",
+    "@nuxtjs/supabase": "^1.1.0",
+    "@headlessui/vue": "^1.7.16",
+    "@heroicons/vue": "^2.0.18"
+  },
+  "devDependencies": {
+    "@nuxtjs/tailwindcss": "^6.10.0",
+    "@types/node": "^20.0.0"
+  }
+}
